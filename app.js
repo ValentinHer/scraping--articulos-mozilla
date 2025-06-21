@@ -23,8 +23,8 @@ async function obtenerDatosMozillaBlog() {
       .forEach((elemento) => {
         const imagen = elemento.querySelector("img").src;
 
-        const titulo = elemento.querySelector("block block--1 > post_title > a").innerText;
-        const parrafo = elemento.querySelector("block block--1 > post_tease > p").innerText;
+        const titulo = elemento.querySelector("block block--1 > post_title > a").href;
+        const parrafo = elemento.querySelector("block block--1 > post_tease ").innerText;
         const fechaPublicacion = elemento.querySelector("block block--1 > post_meta > published").innerText;
         const data = {
             pagina:{
@@ -42,7 +42,7 @@ async function obtenerDatosMozillaBlog() {
 
   // Crear archivo JSON
   let jsonData = JSON.stringify(datos);
-  fs.writeFileSync(".json", jsonData, "utf-8");
+  fs.writeFileSync("mozilla.json", jsonData, "utf-8");
   console.log("Archivo JSON creado!!!");
 
   //Crear archivo CSV
@@ -73,6 +73,27 @@ async function obtenerDatosMozillaBlog() {
 
   console.log("Archivo XLSX creado!!!");
 
+  // 8. Crear TXT
+  const crearArchivoTxt = (datos) => {
+    const contenido = datos
+      .map((item, index) => {
+        const { imagen, titulo, parrafo, fechaPublicacion } = item.pagina;
+        return (
+          `Artículo ${index + 1}\n` +
+          `Título: ${titulo}\n` +
+          `Imagen: ${imagen}\n` +
+          `Párrafo: ${parrafo}\n` +
+          `Fecha de publicación: ${fechaPublicacion}\n` +
+          `------------------------------\n`
+        );
+      })
+      .join("\n");
+
+    fs.writeFileSync("articulos.txt", contenido, "utf-8");
+    console.log(" Archivo TXT creado");
+  };
+
+  crearArchivoTxt(datos);
 
   navegador.close();
 }
