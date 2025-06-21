@@ -19,26 +19,23 @@ async function obtenerDatosMozillaBlog() {
   const datos = await pagina.evaluate(() => {
     const resultados = [];
     document
-      .querySelectorAll("main>div:first-child>div:nth-child(2)>div>div.o.q")
+      .querySelectorAll("li.list-item.row.listing")
       .forEach((elemento) => {
-        const imagen = elemento.querySelector("img").src;
+        const imagen = elemento.querySelector("img.avatar")?.src || "Sin imagen";
+        const titulo = elemento.querySelector("h2 > a")?.innerText || "Sin título";
+        const parrafo = elemento.querySelector("p")?.innerText || "Sin párrafo";
+        const fechaPublicacion = elemento.querySelector(".block > .post__meta > .published")?.innerText || "Sin fecha";
 
-        const titulo = elemento.querySelector("block block--1 > post_title > a").href;
-        const parrafo = elemento.querySelector("block block--1 > post_tease ").innerText;
-        const fechaPublicacion = elemento.querySelector("block block--1 > post_meta > published").innerText;
-        const data = {
-            pagina:{
-             imagen,
-             titulo,
-             parrafo,
-             fechaPublicacion
-            }
-        };
-
-        resultados.push(data);
+        resultados.push({
+            imagen,
+            titulo,
+            parrafo,
+            fechaPublicacion,
+        });
       });
     return resultados;
-  });
+  });
+  console.log(datos)
 
   // Crear archivo JSON
   let jsonData = JSON.stringify(datos);
@@ -58,10 +55,10 @@ async function obtenerDatosMozillaBlog() {
   //Crear archivo XLSX
   const data = datos.map(item => {
     return {
-      Titulo: item.pagina.titulo,
-      Imagen: item.pagina.imagen,
-      Parrafo: item.pagina.parrafo,
-      FechaPublicacion: item.pagina.FechaPublicacion
+      Titulo: item.titulo,
+      Imagen: item.imagen,
+      Parrafo: item.parrafo,
+      FechaPublicacion: item.FechaPublicacion
     };
   })
 
@@ -77,7 +74,7 @@ async function obtenerDatosMozillaBlog() {
   const crearArchivoTxt = (datos) => {
     const contenido = datos
       .map((item, index) => {
-        const { imagen, titulo, parrafo, fechaPublicacion } = item.pagina;
+        const { imagen, titulo, parrafo, fechaPublicacion } = item;
         return (
           `Artículo ${index + 1}\n` +
           `Título: ${titulo}\n` +
