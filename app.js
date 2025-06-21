@@ -3,7 +3,7 @@ import fs from "fs";
 import { Parser } from "json2csv";
 import XLSX from "xlsx";
 
-async function obtenerDatosAngularBlog() {
+async function obtenerDatosMozillaBlog() {
   //1.- Instanciar navegador
   const navegador = await puppeteer.launch({
     headless: false,
@@ -23,9 +23,9 @@ async function obtenerDatosAngularBlog() {
       .forEach((elemento) => {
         const imagen = elemento.querySelector("img").src;
 
-        const titulo = elemento.querySelector("div>a>h2").innerText;
-        const parrafo = elemento.querySelector("div>a>div>h3").innerText;
-        const fechaPublicacion = elemento.querySelector("div>span>div>div").innerText;
+        const titulo = elemento.querySelector("block block--1 > post_title > a").innerText;
+        const parrafo = elemento.querySelector("block block--1 > post_tease > p").innerText;
+        const fechaPublicacion = elemento.querySelector("block block--1 > post_meta > published").innerText;
         const data = {
             pagina:{
              imagen,
@@ -77,4 +77,4 @@ async function obtenerDatosAngularBlog() {
   navegador.close();
 }
 
-obtenerDatosAngularBlog();
+obtenerDatosMozillaBlog();
