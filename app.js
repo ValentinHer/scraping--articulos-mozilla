@@ -22,7 +22,7 @@ async function obtenerDatosMozillaBlog() {
       .querySelectorAll("li.list-item.row.listing")
       .forEach((elemento) => {
         const imagen = elemento.querySelector("img.avatar")?.src || "Sin imagen";
-        const titulo = elemento.querySelector("h2 > a")?.innerText || "Sin título";
+        const titulo = elemento.querySelector(".block > .post__title > a")?.innerText || "Sin título";
         const parrafo = elemento.querySelector("p")?.innerText || "Sin párrafo";
         const fechaPublicacion = elemento.querySelector(".block > .post__meta > .published")?.innerText || "Sin fecha";
 
@@ -39,7 +39,7 @@ async function obtenerDatosMozillaBlog() {
 
   // Crear archivo JSON
   let jsonData = JSON.stringify(datos);
-  fs.writeFileSync("mozilla.json", jsonData, "utf-8");
+  fs.writeFileSync("datosMozillaBlog.json", jsonData);
   console.log("Archivo JSON creado!!!");
 
   //Crear archivo CSV
@@ -48,7 +48,7 @@ async function obtenerDatosMozillaBlog() {
     fields,
     defaultValue: "No hay Información",
   });
-  const csv = json2csvParse.parse(datos.map(item => item.pagina));
+  const csv = json2csvParse.parse(datos.map(item => item));
   fs.writeFileSync("datosMozillaBlog.csv", csv, "utf-8");
   console.log("Archivo CSV creado!!!");
 
