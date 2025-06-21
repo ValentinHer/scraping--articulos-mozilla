@@ -27,10 +27,12 @@ async function obtenerDatosAngularBlog() {
         const parrafo = elemento.querySelector("div>a>div>h3").innerText;
         const fechaPublicacion = elemento.querySelector("div>span>div>div").innerText;
         const data = {
-          imagen,
-          titulo,
-          parrafo,
-          fechaPublicacion
+            pagina:{
+             imagen,
+             titulo,
+             parrafo,
+             fechaPublicacion
+            }
         };
 
         resultados.push(data);
@@ -49,28 +51,25 @@ async function obtenerDatosAngularBlog() {
     fields,
     defaultValue: "No hay Información",
   });
-  const csv = json2csvParse.parse(datos.map(item => item.articulo));
-  fs.writeFileSync("datosAngularBlog.csv", csv, "utf-8");
+  const csv = json2csvParse.parse(datos.map(item => item.pagina));
+  fs.writeFileSync("datosMozillaBlog.csv", csv, "utf-8");
   console.log("Archivo CSV creado!!!");
 
   //Crear archivo XLSX
   const data = datos.map(item => {
     return {
-      Titulo: item.articulo.titulo,
-      Texto: item.articulo.texto,
-      Autor: item.articulo.autor.nombre,
-      Avatar: item.articulo.autor.avatar,
-      Fecha: item.articulo.fecha,
-      Likes: item.articulo.reacciones.likes,
-      Comentarios: item.articulo.reacciones.comentarios
+      Titulo: item.pagina.titulo,
+      Imagen: item.pagina.imagen,
+      Parrafo: item.pagina.parrafo,
+      FechaPublicacion: item.pagina.FechaPublicacion
     };
   })
 
   const worksheet = XLSX.utils.json_to_sheet(data);
 
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Datos Angular Blog");
-  XLSX.writeFile(workbook, "datosAngularBlog.xlsx");
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Datos mozilla Blog");
+  XLSX.writeFile(workbook, "datosMozillaBlog.xlsx");
 
   console.log("Archivo XLSX creado!!!");
 
